@@ -1,3 +1,7 @@
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
+
 [CustomPropertyDrawer(typeof(DatabaseViewAttribute))]
 public class DatabaseViewDrawer : PropertyDrawer
 {
@@ -97,7 +101,7 @@ public class DatabaseViewDrawer : PropertyDrawer
         if (elementFields == null || property.arraySize == 0) return;
 
         float yPos = HEADER_HEIGHT;
-        float columnWidth = (GUIView.current?.position.width ?? Screen.width) / elementFields.Length;
+        float columnWidth = Screen.width / elementFields.Length;
 
         GUIStyle cellStyle = new GUIStyle(EditorStyles.label)
         {
@@ -110,51 +114,51 @@ public class DatabaseViewDrawer : PropertyDrawer
             SerializedProperty element = property.GetArrayElementAtIndex(i);
             DrawRow(element, yPos, columnWidth, cellStyle);
             yPos += ROW_HEIGHT;
-                    }
-                }
+        }
+    }
             
-                private void DrawRow(SerializedProperty element, float yPos, float columnWidth, GUIStyle style)
-                {
-                    Rect rowRect = new Rect(0, yPos, columnWidth, ROW_HEIGHT);
-                    object elementObj = GetTargetObject(element);
-            
-                    foreach (var field in elementFields)
-                    {
-                        object value = field.GetValue(elementObj);
-                        GUI.Label(rowRect, value?.ToString() ?? "null", style);
-                        rowRect.x += columnWidth;
-                    }
-                }
-            
-                private float GetTotalWidth(float availableWidth)
-                {
-                    return elementFields?.Length > 0 
-                        ? elementFields.Length * (availableWidth / elementFields.Length)
-                        : availableWidth;
-                }
-            
-                private System.Type GetTypeFromProperty(SerializedProperty prop)
-                {
-                    return GetTargetObject(prop)?.GetType();
-                }
-            
-                private object GetTargetObject(SerializedProperty prop)
-                {
-                    string path = prop.propertyPath.Replace(".Array.data[", "[");
-                    object obj = prop.serializedObject.targetObject;
-                    return GetNestedObject(path, obj);
-                }
-            
-                private object GetNestedObject(string path, object obj)
-                {
-                    foreach (string part in path.Split('.'))
-                    {
-                        if (obj == null) return null;
-                        System.Type type = obj.GetType();
-                        FieldInfo field = type.GetField(part, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (field == null) return null;
-                        obj = field.GetValue(obj);
-                    }
-                    return obj;
-                }
-            }
+    private void DrawRow(SerializedProperty element, float yPos, float columnWidth, GUIStyle style)
+    {
+        Rect rowRect = new Rect(0, yPos, columnWidth, ROW_HEIGHT);
+        object elementObj = GetTargetObject(element);
+
+        foreach (var field in elementFields)
+        {
+            object value = field.GetValue(elementObj);
+            GUI.Label(rowRect, value?.ToString() ?? "null", style);
+            rowRect.x += columnWidth;
+        }
+    }
+
+    private float GetTotalWidth(float availableWidth)
+    {
+        return elementFields?.Length > 0 
+            ? elementFields.Length * (availableWidth / elementFields.Length)
+            : availableWidth;
+    }
+
+    private System.Type GetTypeFromProperty(SerializedProperty prop)
+    {
+        return GetTargetObject(prop)?.GetType();
+    }
+
+    private object GetTargetObject(SerializedProperty prop)
+    {
+        string path = prop.propertyPath.Replace(".Array.data[", "[");
+        object obj = prop.serializedObject.targetObject;
+        return GetNestedObject(path, obj);
+    }
+
+    private object GetNestedObject(string path, object obj)
+    {
+        foreach (string part in path.Split('.'))
+        {
+            if (obj == null) return null;
+            System.Type type = obj.GetType();
+            FieldInfo field = type.GetField(part, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (field == null) return null;
+            obj = field.GetValue(obj);
+        }
+        return obj;
+    }
+}
