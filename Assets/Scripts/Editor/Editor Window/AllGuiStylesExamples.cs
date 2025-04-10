@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class AllGuiStylesExamples : EditorWindow
 {
+    private Vector2 _contentScroll;
+
     [MenuItem("Tools/All Gui Styles")]
     public static void ShowWindow()
     {
@@ -13,6 +15,8 @@ public class AllGuiStylesExamples : EditorWindow
 
     private void OnGUI()
     {
+        _contentScroll = EditorGUILayout.BeginScrollView(_contentScroll);
+
         var width = EditorGUILayout.GetControlRect(GUILayout.Height(0f)).width;
         foreach (var style in typeof(EditorStyles).GetProperties())
         {
@@ -23,5 +27,7 @@ public class AllGuiStylesExamples : EditorWindow
                 GUI.Box(rect, content, guistyle);
             }
         }
+
+        EditorGUILayout.EndScrollView();
     }
 }
