@@ -1,18 +1,21 @@
 using UnityEditor;
 using UnityEngine;
 
-public sealed class CustomProperty
+namespace CRT.EditorUtilities
 {
-    public SerializedProperty Property { get; private set; }
-    public string Tooltip { get; private set; }
-    public string Label { get; private set; }
-    public GUIStyle Style { get; private set; }
-
-    public CustomProperty(SerializedProperty property, string toolTip = null, string label = null, GUIStyle style = null)
+    public sealed class CustomProperty
     {
-        Property = property;
-        Tooltip = toolTip;
-        Label = label;
-        Style = style;
+        public SerializedProperty Property { get; private set; }
+        public string Tooltip { get; private set; }
+        public string Label { get; private set; }
+        public GUIStyle Style { get; private set; }
+
+        public CustomProperty(SerializedProperty property, string toolTip = null, string label = null, GUIStyle style = null)
+        {
+            Property = property;
+            Tooltip = toolTip;
+            Label = label;
+            Style = style;
+        }
     }
 }

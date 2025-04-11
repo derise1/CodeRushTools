@@ -1,13 +1,16 @@
 using System;
 using UnityEngine;
 
-[AttributeUsage(AttributeTargets.Field)]
-public class SpritePreviewAttribute : PropertyAttribute
+namespace CRT.Attributes
 {
-    public float Size { get; private set; }
-
-    public SpritePreviewAttribute(float size = 64)
+    [AttributeUsage(AttributeTargets.Field)]
+    public class SpritePreviewAttribute : PropertyAttribute
     {
-        Size = size;
+        public float Size { get; private set; }
+
+        public SpritePreviewAttribute(float size = 64)
+        {
+            Size = size;
+        }
     }
 }
